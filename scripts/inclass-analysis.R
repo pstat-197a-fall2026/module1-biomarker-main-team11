@@ -98,6 +98,13 @@ class_metrics <- metric_set(sensitivity,
 
 testing(biomarker_split) %>%
   add_predictions(fit, type = 'response') %>%
-  class_metrics(estimate = factor(pred > 0.5),
-              truth = factor(class), pred,
-              event_level = 'second')
+  mutate(
+    class = factor(class),                       # Ensure truth is a factor
+    pred_class = factor(pred > 0.5)              # Create factor for hard-class metrics
+  ) %>%
+  class_metrics(
+    truth = class,                               # Pass unquoted column name
+    estimate = pred_class,                       # Pass unquoted factor estimate column
+    pred,                                        # Probability column for roc_auc()
+    event_level = 'second'
+  )
