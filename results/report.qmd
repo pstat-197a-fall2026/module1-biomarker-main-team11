@@ -74,7 +74,23 @@ Summarize your findings here. I've included some subheaders in a way that seems 
 
 ### Impact of preprocessing and outliers
 
-Tasks 1-2
+Task 1
+
+**Why log-transform?** Raw protein levels are strictly positive (minimum 12.9) and mostly right-skewed, with a few very large values (\@fig-log). The median skewness across all 1,317 proteins is 2.26 on the raw scale and 0.83 after log10, and the share of proteins with skewness above 1 falls from 76% to 45%. Raw levels also have a spread that grows with the mean: the correlation between a protein's mean and its SD is 0.78 raw but 0.10 after log10. The log transform therefore pulls in the long right tail and puts proteins on a comparable scale, which better fits the roughly symmetric, equal-variance behavior that the t-tests assume and keeps a few extreme raw values from dominating means and SDs. The transform does not fully symmetrize every protein, since 45% still have skewness above 1.
+
+Distributions of nine randomly sampled proteins before and after the log10 transform.
+
+Task 2
+
+**Outliers.** We removed the trimming step and defined an outlying value as a standardized value beyond ±3, the same cutoff used for trimming. This flags 2,379 of 202,818 values (1.2%), 83% of them on the high side. Under normality we would expect about 3.6 outlying values per subject; the median subject has 8.5. Outliers are concentrated in a few subjects rather than in particular proteins (no protein has more than 7 outlying values). Thirteen subjects exceed the Tukey upper fence on per-subject counts (about 29 outlying values) and together account for 46% of all outlying values (\@fig-outliers). The most extreme are subjects 154 (157 outlying values), 108 (127), 9 (126), 121 (122), and 52 (121). Several of these have outliers almost entirely in one direction (subject 9 has 126 high and none low), which suggests a sample-level shift rather than protein-specific effects; we did not test this.
+
+Outlying values per subject (\|z\| \> 3, no trimming), ordered by count. The dashed line is the Tukey upper fence on the counts.
+
+------INSERT TABLE---------
+
+Outlying values by group.
+
+TD subjects have more outlying values in raw counts (\@tbl-outliers), but the medians are identical and the difference comes from a handful of extreme subjects. We found no statistical evidence that one group is more outlier-prone: the Wilcoxon rank-sum test on per-subject counts gives p = 0.82, a permutation test on mean counts gives p = 0.29, and a Fisher exact test on flagged subjects gives p = 0.25. Trimming at ±3 caps these values rather than removing the subjects, so the flagged subjects still contribute many capped values to every downstream analysis.
 
 ### Methodological variations
 
