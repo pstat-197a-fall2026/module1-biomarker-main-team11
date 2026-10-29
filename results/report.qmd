@@ -89,7 +89,7 @@ Distributions of nine randomly sampled proteins before and after the log10 trans
 ![Outlying values per subject (\|z\| \> 3, no trimming), ordered by count. The dashed line is the Tukey upper fence on the counts.](q2-outliers-by-subject.png){#fig-outliers}
 
 | Group | Subjects | Total outlying values | Mean per subject | Median per subject | Flagged subjects |
-|------------|------------|------------|------------|------------|------------|
+|----|----|----|----|----|----|
 | ASD | 76 | 1,007 | 13.2 | 8.5 | 4 |
 | TD | 78 | 1,372 | 17.6 | 8.5 | 9 |
 
@@ -99,7 +99,38 @@ TD subjects have more outlying values in raw counts (@tbl-outliers), but the med
 
 ### Methodological variations
 
-Task 3
+#### Preventing Data Leakage
+
+**Methodology**
+
+In the original in-class analysis, feature selection using t-tests and Random Forest importance was performed on the full dataset before the train-test split. This could introduce data leakage because information from the test set was used during feature selection, potentially leading to overly optimistic performance estimates.
+
+To address this issue, we used an 80/20 train-test split, with 122 samples in the training set and 32 in the testing set. All feature selection steps were performed using the training set only. First, we conducted t-tests with multiple-testing correction and selected the top 10 proteins. Next, we fitted a Random Forest model with 1,000 trees and selected another 10 proteins based on MeanDecreaseGini importance. We then identified the intersection of these two sets, resulting in three proteins: DERM, IgD, and TrkC.
+
+A logistic regression model was fitted using these three proteins on the training set and evaluated on the held-out test set.
+
+**Results**
+
+The model achieved the following results on the held-out test set:
+
+| Metric      | Training-only feature selection |
+|:------------|--------------------------------:|
+| ROC AUC     |                           0.812 |
+| Accuracy    |                           0.750 |
+| Sensitivity |                           0.812 |
+| Specificity |                           0.688 |
+
+The test set contained 32 samples, including 16 ASD and 16 TD samples. The model correctly classified 24 out of 32 samples, including 13 of the 16 ASD samples and 11 of the 16 TD samples.
+
+**Comparison with the in-class baseline**
+
+The in-class baseline achieved an ROC AUC of 0.883, an accuracy of 0.774, a sensitivity of 0.812, and a specificity of 0.733. Compared with the baseline, our model had a lower ROC AUC and accuracy, the same sensitivity, and a lower specificity.
+
+However, the two results should be compared with caution. The in-class analysis performed feature selection on the full dataset, including the test samples, which could lead to overly optimistic performance estimates. Our analysis used only the training data for feature selection, reducing this risk. The test sets also differed in size, so the performance difference cannot be attributed to feature selection alone.
+
+**Limitations**
+
+The test set was relatively small, so the performance estimates may be uncertain. Further validation using independent datasets and repeated train-test splits would help assess the stability of the results. Although the model showed some ability to distinguish ASD from TD samples, these findings do not establish its clinical usefulness for early ASD detection.
 
 ### Improved classifier
 
