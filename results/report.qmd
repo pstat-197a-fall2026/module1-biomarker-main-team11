@@ -74,8 +74,6 @@ Summarize your findings here. I've included some subheaders in a way that seems 
 
 ### Impact of preprocessing and outliers
 
-### Impact of preprocessing and outliers
-
 **Why log-transform?** Raw protein levels are strictly positive (minimum 12.9) and mostly right-skewed, with a few very large values (@fig-log). The median skewness across all 1,317 proteins is 2.26 on the raw scale and 0.83 after log10, and the share of proteins with skewness above 1 falls from 76% to 45%. Raw levels also have a spread that grows with the mean: the correlation between a protein's mean and its SD is 0.78 raw but 0.10 after log10. The log transform therefore pulls in the long right tail and puts proteins on a comparable scale, which better fits the roughly symmetric, equal-variance behavior that the t-tests assume and keeps a few extreme raw values from dominating means and SDs. The transform does not fully symmetrize every protein, since 45% still have skewness above 1. Ω¢
 
 ::: {#fig-log layout-ncol="2"}
