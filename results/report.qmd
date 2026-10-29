@@ -82,4 +82,20 @@ Task 3
 
 ### Improved classifier
 
-Task 4
+**Baseline Results**
+
+The in-class analysis selected 5 proteins for the panel (DERM, RELT, MRC2, IgD,     Cadherin-5) and achieved these metrics on the testing data: sensitivity: 0.812, specificity: 0.733, accuracy: 0.774, roc_auc: 0.883. 
+
+**Methodology and Results**
+
+To find a panel with the same number of proteins but with higher accuracy, we decided to use a LASSO approach to get a panel of 5 proteins. This approach sets many of the variable weights to 0 and uses a small but important subset of the features. We used lasso logistic regression (glmnet, 200-penalty path) fit on the training set only and took the top 5 proteins. Proteins were ranked by when they entered the lasso path. This led to a new protein panel (DERM, IgD, 14-3-3 protein zeta/delta, M2-PK, Coagulation Factor IX), where only DERM and IgD are shared between the two panels. 
+
+Testing this new panel using the same logistic regression as the in-class analysis, we achieved sensitivity 0.688; specificity 0.933; accuracy 0.806; roc_auc 0.933. Comparing the metrics, the true positive rate went down while the true negative rate went up compared to the baseline. This tradeoff came with an overall improvement to the roc_auc, 0.05 higher than the baseline. 
+
+We also wanted to see if this method could achieve a simpler panel with comparable accuracy as well. Trying a smaller panel using the top 3 and top 4 proteins, we achieved results of  sensitivity: 0.562, specificity: 0.8, accuracy: 0.677, roc_auc: 0.8 and sensitivity: 0.5, specificity: 0.933, accuracy: 0.710, roc_auc: 0.825 respectively. Unfortunately, the roc_auc on these panels is not that comparable to the baseline. Finding a simpler panel that achieves similar results would need another method. 
+
+**Limitations**
+
+The accuracy increase seems like an improvement, but because of the small test size (31), it only differs from the baseline by 1 correct classification. The small test size also means that the other test metrics should be taken with some skepticism. The new panel scores higher than the previous panel in terms of roc_auc here, but testing with different splits could lead to different results. 
+
+However, the in-class panel was selected using the full dataset (t-tests and a random forest on all subjects), including the subjects later used as the test set, so its test metrics are likely optimistic. Our lasso panel was selected using the training set only. The comparison is therefore conservative toward the new panel.
