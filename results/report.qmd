@@ -132,7 +132,15 @@ However, the two results should be compared with caution. The in-class analysis 
 
 The test set was relatively small, so the performance estimates may be uncertain. Further validation using independent datasets and repeated train-test splits would help assess the stability of the results. Although the model showed some ability to distinguish ASD from TD samples, these findings do not establish its clinical usefulness for early ASD detection.
 
-------- ADD Q3b ———
+#### Increasing the number of selected proteins
+
+We investigated whether increasing the number of proteins selected by each feature-selection method would improve classification performance. Instead of selecting the top 10 proteins from each method, we selected the top 20 using t-test significance and random forest importance. We then took the intersection of the two lists and trained a logistic regression classifier.
+
+Feature selection was performed using the training set only, with an 80/20 train-test split. The top-10 approach selected 6 proteins (DERM, Calcineurin, MAPK2, gp130 soluble, IgD, and MAPK14), while the top-20 approach selected 13 proteins.
+
+The top-10 model achieved a sensitivity of 0.562, specificity of 0.812, accuracy of 0.688, and ROC AUC of 0.715. The top-20 model achieved a sensitivity of 0.625, specificity of 0.812, accuracy of 0.719, and ROC AUC of 0.707.
+
+Increasing the number of selected proteins slightly improved sensitivity and accuracy, while specificity remained unchanged. However, ROC AUC decreased slightly. This suggests that including more proteins did not substantially improve the classifier's ability to distinguish between ASD and TD subjects. The additional proteins may have contributed some useful predictive information, but did not improve overall discrimination.
 
 ### Fuzzy intersection
 
