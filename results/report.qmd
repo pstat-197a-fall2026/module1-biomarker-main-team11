@@ -84,12 +84,12 @@ Summarize your findings here. I've included some subheaders in a way that seems 
 Distributions of nine randomly sampled proteins before and after the log10 transform.
 :::
 
-**Outliers.** We removed the trimming step and defined an outlying value as a standardized value beyond ±3, the same cutoff used for trimming. This flags 2,379 of 202,818 values (1.2%), 83% of them on the high side. Under normality we would expect about 3.6 outlying values per subject; the median subject has 8.5. Outliers are concentrated in a few subjects rather than in particular proteins (no protein has more than 7 outlying values). Thirteen subjects exceed the Tukey upper fence on per-subject counts (about 29 outlying values) and together account for 46% of all outlying values (@fig-outliers). The most extreme are subjects 154 (157 outlying values), 108 (127), 9 (126), 121 (122), and 52 (121). Several of these have outliers almost entirely in one direction (subject 9 has 126 high and none low), which suggests a sample-level shift rather than protein-specific effects; we did not test this.
+**Outliers.** We removed the trimming step and defined an outlying value as a standardized value beyond ±3, the same cutoff used for trimming. This flags 2,379 of 202,818 values (1.2%), 83% of them on the high side. Under normality we would expect about 3.6 outlying values per subject; the median subject has 8.5. Outliers are concentrated in a few subjects rather than in particular proteins (no protein has more than 7 outlying values). Thirteen subjects exceed the Tukey upper fence on per-subject counts (about 29 outlying values) and together accoxunt for 46% of all outlying values (@fig-outliers). The most extreme are subjects 154 (157 outlying values), 108 (127), 9 (126), 121 (122), and 52 (121). Several of these have outliers almost entirely in one direction (subject 9 has 126 high and none low), which suggests a sample-level shift rather than protein-specific effects; we did not test this.
 
 ![Outlying values per subject (\|z\| \> 3, no trimming), ordered by count. The dashed line is the Tukey upper fence on the counts.](q2-outliers-by-subject.png){#fig-outliers}
 
 | Group | Subjects | Total outlying values | Mean per subject | Median per subject | Flagged subjects |
-|----|----|----|----|----|----|
+|------------|------------|------------|------------|------------|------------|
 | ASD | 76 | 1,007 | 13.2 | 8.5 | 4 |
 | TD | 78 | 1,372 | 17.6 | 8.5 | 9 |
 
@@ -131,6 +131,30 @@ However, the two results should be compared with caution. The in-class analysis 
 **Limitations**
 
 The test set was relatively small, so the performance estimates may be uncertain. Further validation using independent datasets and repeated train-test splits would help assess the stability of the results. Although the model showed some ability to distinguish ASD from TD samples, these findings do not establish its clinical usefulness for early ASD detection.
+
+------- ADD Q3b ———
+
+### Fuzzy intersection
+
+**Methodology**
+
+In the baseline, a protein is kept when if appeared in the top 10 proteins of t-test and the random forest(hard intersection). A protein that one method ranks highly and another ranks a little lower is ignored. Instead we used a fuzzy intersection which keeps a protein if it appears in top n set of at least 2 of 3 selection methods. Since the baseline has two methods we added lasso regression which ranks by when they enter the lasso path. Comparing the hard rule where 3 methods must select the protein with the fuzzy rule(2 of 3) for n = 10, 20 and 30. Each panel was fit with logistic regression on a training set of 80% the subjects. To reduce the effect of a lucky or unlucky split the process was repeated over 10 random split and report averages.
+
+**Results**
+
+![Mean test accuracy for the hard and fuzzy rules at each panel size.](q3c-accuracy.png){#fig-q3c}
+
+The fuzzy rule keeps all protein the hard rule keeps and adds ones chosen by two methods so it's panels are as large. For n=10 proteins per method the hard rule kept on average \[A\] proteins and the fuzzy rule kept \[B\]. With n = 30, the hard rule kept \[C\] and the fuzzy rule kept \[D\].
+
+Mean test accuracy was similar across the rules(0.73 to 0.80). The baseline(t-test and random forest so top 10 each) had a mean accuracy of 0.73. The fuzzy rule was slightly more accurate than the hard rule at n = 10 (about 0.77 vs. 0.75), about the same at n = 20, and slightly less accurate at n = 30 (about 0.76 vs. 0.80). There was no consistent advantage for either rule.
+
+**Comparison with the baseline**
+
+Replacing the hard intersection with a fuzzy one changed the size of the final panel more than it changed accuracy. The accuracy differences are a few percentage points, which is about the effect of one or two test subjects, so we do not conclude that the fuzzy intersection improves classification.
+
+**Limitations**
+
+The test sets were small (about 31 subjects, so one subject is about 3 percentage points of accuracy), so differences of a few points between rules could change with a different split. Averaging over 10 splits reduces this problem but does not remove it. Proteins were selected using all subjects, including those later used for testing, so these accuracies are likely optimistic, as discussed in the data leakage section.
 
 ### Improved classifier
 
