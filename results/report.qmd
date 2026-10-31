@@ -14,28 +14,21 @@ execute:
   cache: true
 ---
 
-Use this as a template. Keep the headers and remove all other text. In all, your report can be quite short. When it is complete, render and then push changes to your team repository.
-
 ```{r}
-# load any other packages and read data here
 library(tidyverse)
 ```
 
 ## Abstract
 
-Write a brief one-paragraph abstract that describes the contents of your write-up.
+Early detection of autism spectrum disorder (ASD) from blood-based biomarkers has been suggested using serum protein levels as a published study reports a logistic regression classifier built on a small protein panel. We reanalyzed the data from this study with new variations and examined how methodological choices affect results. First, we showed how the log10 transform reduces skewness (median 2.26 to 0.83) and that outlying values are concentrated in a small number of subjects. We then showed that selecting proteins using the training set gives a test AUC of 0.812 compared with the baseline of 0.883, suggesting that the study's approach is optimistic. Increasing the number of proteins selected per method and replacing the hard intersection with a fuzzy “2 of 3 methods” rule changed panel size more than accuracy. Last, a LASSO selected five protein panel had an AUC of 0.933 on the test set. With 31–32 test subjects, we do not claim that any of the variations clearly improves on the baseline.
 
 ## Dataset
-
-Write a brief data description, including: how data were obtained; sample characteristics; variables measured; and data preprocessing. This can be largely based on the source paper and should not exceed 1-2 paragraphs.
 
 Data was obtained from serum samples from 76 boys with ASD and 78 typically developing (TD) boys, 18 months - 8 years of age. Participants were not randomly selected, instead enrolled based on specific clinical screening criteria. Participants with genetic, metabolic, or other concurrent physical, mental, or neurological disorders were excluded. TD subjects were excluded if they had any first- or second-degree relatives diagnosed with ASD.
 
 1317 proteins were measured, with 192 of them failing quality control of the original study. Because the ones that failed quality control are unknown, we will be using all of them. Protein abundance data was normalized by taking log10 transform and then z-transformation. To deal with outliers, any values after transformation above 3 or below -3 were clipped to those values.
 
 ## Summary of published analysis
-
-Summarize the methodology of the paper in 1-3 paragraphs. You need not explain the methods in depth as we did in class; just indicate what methods were used and how they were combined. If possible, include a diagram that depicts the methodological design. (Quarto has support for [GraphViz and Mermaid flowcharts](https://quarto.org/docs/authoring/diagrams.html).) Provide key results: the proteins selected for the classifier and the estimated accuracy.
 
 After data collection and preprocessing, researchers combined 3 feature selection techniques.
 
@@ -69,8 +62,6 @@ flowchart TD
 ```
 
 ## Findings
-
-Summarize your findings here. I've included some subheaders in a way that seems natural to me; you can structure this section however you like.
 
 ### Impact of preprocessing and outliers
 
@@ -152,7 +143,7 @@ In the baseline, a protein is kept when if appeared in the top 10 proteins of t-
 
 ![Mean test accuracy for the hard and fuzzy rules at each panel size.](q3c-accuracy.png){#fig-q3c}
 
-The fuzzy rule keeps all protein the hard rule keeps and adds ones chosen by two methods so it's panels are as large. For n=10 proteins per method the hard rule kept on average \[A\] proteins and the fuzzy rule kept \[B\]. With n = 30, the hard rule kept \[C\] and the fuzzy rule kept \[D\].
+The fuzzy rule keeps every protein the hard rule keeps and adds proteins chosen by only two methods, so its panels are at least as large. For n = 10 proteins per method, the hard rule kept on average 3 proteins and the fuzzy rule kept 9. With n = 20, the hard rule kept 5 and the fuzzy rule kept 13. With n = 30, the hard rule kept 6 and the fuzzy rule kept 22.
 
 Mean test accuracy was similar across the rules(0.73 to 0.80). The baseline(t-test and random forest so top 10 each) had a mean accuracy of 0.73. The fuzzy rule was slightly more accurate than the hard rule at n = 10 (about 0.77 vs. 0.75), about the same at n = 20, and slightly less accurate at n = 30 (about 0.76 vs. 0.80). There was no consistent advantage for either rule.
 
@@ -187,3 +178,7 @@ We also wanted to see if this method could achieve a simpler panel with comparab
 The accuracy increase seems like an improvement, but because of the small test size (31), it only differs from the baseline by 1 correct classification. The small test size also means that the other test metrics should be taken with some skepticism. The new panel scores higher than the previous panel in terms of roc_auc here, but testing with different splits could lead to different results. 
 
 However, the in-class panel was selected using the full dataset (t-tests and a random forest on all subjects), including the subjects later used as the test set, so its test metrics are likely optimistic. Our lasso panel was selected using the training set only. The comparison is therefore conservative toward the new panel.
+
+### Summary:
+
+Across our analyses, the serum protein signal for ASD from typical development holds up however, published performance is somewhat optimistic and our variations did not clearly improve it. The signal is real but modest. Selecting protein on all subjects inflates performance. More proteins do not help, LASSO is the most promising variation we made. All of our conclusions and evidence is limited by sample size. In conclusion, a small protein panel carries real but modest signal for ASD, and only independent validation can show whether it holds up beyond this dataset.
